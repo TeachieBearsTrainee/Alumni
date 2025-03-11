@@ -1,6 +1,14 @@
+import AboutUs from "./components/AboutUs"
+import Footer from "./components/Footer"
+import Navbar from "./components/Navbar"
+
 const App = () => {
   return (
-    <h1 className="text-3xl font-bold underline">Alumni</h1>
+    <>
+      <Navbar />
+      <AboutUs />
+      <Footer />
+    </>
   )
 }
 export default App
