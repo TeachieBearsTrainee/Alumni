@@ -3,6 +3,8 @@ import Navbar from "./Navbar";
 import { motion } from "framer-motion";
 import Card from "./Card";
 
+
+
 export const Home = () => {
   return (
     <>
@@ -84,7 +86,7 @@ export const Home = () => {
                   literature from 45 BC.
                 </p>
               </div>
-              <div className="transition-all duration-300 group-hover:bg-black group-hover:text-white">
+              <div className="">
                 <button className="mt-6 px-6 w-[70%] py-3  rounded-4xl border border-[rgba(255,255,255,0.2)] ">
                   Explore More
                 </button>
@@ -116,6 +118,10 @@ export const Home = () => {
         </div>
       </div>
 
+
+     
+
+      
       
     </>
   );
