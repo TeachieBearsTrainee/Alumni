@@ -29,7 +29,7 @@ const Footer = () => {
                             <p className=' text-xs'>Contact Us</p>
                         </div>
                     </div>
-                    <div className='flex flex-col gap-3 absolute -right-29 bottom-18'>
+                    <div className='flex flex-col gap-5 absolute left-270 bottom-18'>
                         <div className='  '>
                             <p className=' pb-1.5 font-bold'>lets do it!</p>
                             <div className=' flex'>
@@ -43,10 +43,10 @@ const Footer = () => {
 
                         </div>
                         <p className=' font-medium'>Subscribe</p>
-                        <p className=' w-[60%] font-light text-sm'>Subscribe to stay tuned for new web design and latest updates. Lets do it!</p>
-                        <span>
-                            <input placeholder=' Enter your email address' className=' h-6 w-[40%] bg-white text-gray-400 text-sm font-light' />
-                            <button className=' w-20 h-6 bg-gradient-to-r from-[#C15A01] to-[#F4892C] text-xs font-light'>Subscribe</button>
+                        <p className=' w-[80%] font-light text-sm'>Subscribe to stay tuned for new web design and latest updates. Lets do it!</p>
+                        <span className=' w-[100%]'>
+                            <input placeholder=' Enter your email address' className=' h-6  bg-white text-gray-400 text-sm w-[55%] font-light' />
+                            <button className=' w-[25%] h-6 bg-gradient-to-r from-[#C15A01] to-[#F4892C] text-xs font-light'>Subscribe</button>
                         </span>
                     </div>
                 </div>
