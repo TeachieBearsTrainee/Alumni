@@ -14,7 +14,6 @@ const studentSchema = new Schema({
     },
     profilePic: {
         type: String,
-        required: [true, "Profile picture URL is required"]
     },
     degree: {
         type: String,
