@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Subscription from "./components/Subscription"
 // import Slides from "./components/Slides"
 import Example from "./components/Example"
+import Chats from "./components/connections/Connections"
 
 const App = () => {
 
@@ -21,7 +22,10 @@ const App = () => {
       path: '/home',
       element: <><Navbar /><Example /><Footer /></>
     },
-
+    {
+      path: '/chat',
+      element: <><Navbar /><Chats /><Footer /></>
+    },
 
   ])
 

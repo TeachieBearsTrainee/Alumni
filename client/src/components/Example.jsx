@@ -7,22 +7,22 @@ const Example = () => {
         {
             image: "url('/images/Component24.png')",
             text: "Landscape",
-            slide: "/images/slide1.png"
+            slide: "/images/slide1-1.png"
         },
         {
             image: "url('/images/slides_1.jpg')",
             text: "Portaits",
-            slide: "/images/slide2.png"
+            slide: "/images/slide2-2.png"
         },
         {
             image: "url('/images/Component23.png')",
             text: "Abstract",
-            slide: "/images/slide3.png"
+            slide: "/images/slide4-4.png"
         },
         {
             image: "url('/images/Component25.png')",
             text: "Sports",
-            slide: "/images/slide4.png"
+            slide: "/images/slide3-3.png"
         },
     ];
 
@@ -56,6 +56,7 @@ const Example = () => {
                     }`}
                 style={{ backgroundImage: images[currentImage].image }}
             ></div>
+            {/* {} */}
             <div className=" flex">
                 <div className=' px-[6%] py-[6%] w-[45%] flex flex-col justify-center gap-12 text-white z-20'>
                     <h1
@@ -69,14 +70,14 @@ const Example = () => {
                 <div className="absolute bottom-40 left-300 transform -translate-x-1/2 w-full max-w-screen-lg overflow-hidden">
                     <div
                         className="flex transition-transform duration-500 "
-                        style={{ transform: `translateX(-${currentImage * 35}%)`, transition: "transform 2s ease-out-in" }}
+                        style={{ transform: `translateX(-${currentImage * 36}%)`, transition: "transform 2s ease-out-in" }}
                     >
                         {images.map((newArr, index) => (
                             <img
                                 key={index}
                                 src={newArr.slide}
                                 alt={`Slide ${index}`}
-                                className={`w-[370px] h-[430px] object-cover rounded-xl mx-2 cursor-pointer transition-all duration-500 ${index === currentImage ? "scale-100" : " scale-70 "}`}
+                                className={`w-[370px] h-[430px] object-cover rounded-4xl mx-2 cursor-pointer transition-all duration-500 border-4 ${index === currentImage ? "scale-100 border-white" : " scale-70 border-transparent"}`}
                                 onClick={() => handleClick(index)}
                             />
                         ))}

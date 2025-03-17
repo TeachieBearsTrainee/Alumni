@@ -16,7 +16,7 @@ const Navbar = () => {
                     <Link to="/home" className="hover:text-blue-400">Home</Link>
                     <Link to="/" className="hover:text-blue-400">About Us</Link>
                     <Link to="/subscription" className="hover:text-blue-400">Subscription</Link>
-                    <a href="#" className="hover:text-blue-400">Alumni Connections</a>
+                    <Link to="/chat" className="hover:text-blue-400">Alimini Connections</Link>
 
                     {/* Icons */}
                     <a href="#" className="hover:text-blue-400 text-2xl"><GiHumanTarget /></a>
