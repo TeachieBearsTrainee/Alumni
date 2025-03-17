@@ -146,44 +146,53 @@ const logoutUser = asyncHandler(async (req, res) => {
         .clearCookie("refreshToken", options)
         .json(new ApiResponse(200, "User logged out successfully"))
 })
-
-const refreshAccessToken = asyncHandler(async (req, res) => {
+ 
+const refreshAccessToken = asyncHandler(async (req, res, next) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
     if (!incomingRefreshToken) {
-        throw new ApiError(401, "Refresh token is required")
+        return next(new ApiError(401, "Refresh token is required"));
     }
 
     try {
-        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
-        const user = await User.findById(decodedToken?.id)
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-        if (incomingRefreshToken != user?.refreshToken) {
-            throw new ApiError(401, "Invalid refresh token")
+        const user = await User.findById(decodedToken?.id);
+
+        if (!user || incomingRefreshToken !== user.refreshToken) {
+            console.log(incomingRefreshToken, "|", user?.refreshToken);
+            return next(new ApiError(401, "Invalid refresh token"));
         }
 
         const options = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production"
-        }
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict" // Added for CSRF protection
+        };
 
-        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
-        return res
-            .status(200)
+        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
+
+        res
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
-            .json(new ApiResponse(200, { accessToken }, "Access token refreshed successfully"))
+            // .status(200)
+            // .json({ message: "Access token refreshed successfully" });  // Added response
+        
+        next();
 
     } catch (error) {
-        console.log(error)
+        // console.error("Error refreshing token:", error);
+
         if (error.name === "TokenExpiredError") {
-            throw new ApiError(401, "Refresh token expired")
+            res.clearCookie("accessToken");
+            res.clearCookie("refreshToken");
+            return next(new ApiError(401, "Refresh token expired"));
         }
-        throw new ApiError(500, "Something went wrong while refreshing access token")
+
+        return next(new ApiError(500, "Something went wrong while refreshing access token"));
     }
+});
 
-
-})
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body

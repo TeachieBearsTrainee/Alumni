@@ -21,10 +21,11 @@ import e from "express";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { verifyJWT } from "./middlewares/auth.middleware.js";
 import { refreshAccessToken } from "./controllers/user.controller.js";
+import { authorizedRole } from "./middlewares/role.middleware.js";
 
 //routes
 app.use("/api/v1/", userRoute)
-app.get("/api/v1/check",refreshAccessToken, verifyJWT,(req, res) => {
+app.get("/api/v1/check",refreshAccessToken, verifyJWT, authorizedRole("admin"),(req, res) => {
     res.send("authorized");
 })
 
