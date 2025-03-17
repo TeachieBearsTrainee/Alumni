@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "./Navbar";
 import { motion } from "framer-motion";
 import Card from "./Card";
 
@@ -10,7 +9,7 @@ export const Home = () => {
     <>
       {/* First Page */}
       <div className="relative w-full min-h-screen">
-        <Navbar />
+        
 
         {/* Background Images */}
         <div className="absolute inset-0 flex opacity-100">
@@ -63,16 +62,7 @@ export const Home = () => {
       <div
         className="relative w-full px-[90px] py-[30px] flex bg-black bg-cover bg-center bg-no-repeat h-[980px]"
         style={{ backgroundImage: "url('/images/page2.avif')" }}
-      >
-        {/* Background Vertical Lines */}
-        {/* <div className="w-full h-[980px] flex">
-          <div className="border-l-2 border-r border-white w-1/6 h-full opacity-20"></div>
-          <div className="border-r border-white w-1/6 h-full opacity-20"></div>
-          <div className="border-r border-white w-1/6 h-full opacity-20"></div>
-          <div className="border-r border-white w-1/6 h-full opacity-20"></div>
-          <div className="border-r border-white w-1/6 h-full opacity-20"></div>
-          <div className="border-r border-white w-1/6 h-full opacity-20"></div>
-        </div> */}
+      >   
 
         {/* Main Content Overlay */}
         <div className="absolute inset-0 w-full flex border-2 bg-  z-10">
@@ -118,11 +108,10 @@ export const Home = () => {
         </div>
       </div>
 
-
-     
-
-      
       
     </>
   );
 };
+
+
+export default Home;
