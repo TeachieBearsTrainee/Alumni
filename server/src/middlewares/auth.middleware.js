@@ -7,7 +7,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     const token = req.cookies.refreshToken || req.headers?.authorization?.replace("Bearer ", "");
 
     if (!token) {
-        throw new ApiError(401, "Access token not found");
+        throw new ApiError(401, "Refresh token not found");
     }
 
     try {
