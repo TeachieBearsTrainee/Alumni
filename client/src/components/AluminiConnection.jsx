@@ -1,7 +1,7 @@
 import React from "react";
 import { MdLogout } from "react-icons/md";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import Post from "../Post";
+import Posts from "./Posts";
 import Chats from "../Chats";
 import Connection from "./Connection";
 import Events from "./Events";
@@ -41,8 +41,8 @@ const AluminiConnection = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-[73%] h-full bg-[#1A1A1A] rounded-3xl">
-        <TabPanel><Post /></TabPanel>
+      <div className="w-[73%] h-full bg-[#1A1A1A] rounded-3xl overflow-auto">
+        <TabPanel><Posts/><Posts/><Posts/></TabPanel>
         <TabPanel><Chats /></TabPanel>
         <TabPanel><Connection /></TabPanel>
         <TabPanel><Events /></TabPanel>

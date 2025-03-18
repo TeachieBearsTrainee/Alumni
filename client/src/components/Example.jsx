@@ -40,7 +40,7 @@ const Example = () => {
 
     return (
         <div
-            className="relative w-full h-200 flex items-center justify-center"
+            className="relative w-full h-230 flex items-center justify-center"
             onClick={handleImageClick}
         >
             {/* Old background Image (fading out) */}

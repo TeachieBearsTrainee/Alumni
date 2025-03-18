@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Card from "./Card";
+import Footer from "./Footer"
+import Example from "./Example"
 
 
 
@@ -108,6 +110,9 @@ export const Home = () => {
         </div>
       </div>
 
+      <Example/>
+
+      <Footer/>
       
     </>
   );
