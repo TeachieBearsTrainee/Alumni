@@ -10,6 +10,8 @@ const errorHandler = (err, req, res, next) => {
         error = new ApiError(statusCode, message, error?.errors || [], error?.stack);
     }
 
+    if(error.name?name == "CastError":"") return error = new ApiError(400, "Casting format");
+
     const response = {
         success: false,
         message: error.message,

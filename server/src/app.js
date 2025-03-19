@@ -4,9 +4,17 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// app.use(cors({
+//     origin: "*",
+//     credentials: true,
+//     allowedHeaders: ["Content-Type", "Authorization"]
+// }));
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
+    origin: "*",
+    methods:"*",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // Common Middleware
@@ -17,20 +25,19 @@ app.use(cookieParser());
 
 //import routes
 import userRoute from "./routes/user.routes.js";
-import e from "express";
-import { errorHandler } from "./middlewares/error.middleware.js";
 import { verifyJWT } from "./middlewares/auth.middleware.js";
 import { refreshAccessToken } from "./controllers/user.controller.js";
 import { authorizedRole } from "./middlewares/role.middleware.js";
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 //routes
 app.use("/api/v1/", userRoute)
-app.get("/api/v1/check",refreshAccessToken, verifyJWT, authorizedRole("admin"),(req, res) => {
+app.get("/api/v1/check",refreshAccessToken, verifyJWT, authorizedRole("user"),(req, res) => {
     res.send("authorized");
 })
 
 // app.use(errorHandler)
 
 
-// app.use(errorHandler)
+app.use(errorHandler)
 export { app };

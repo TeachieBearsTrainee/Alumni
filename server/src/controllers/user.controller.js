@@ -21,7 +21,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
 
     } catch (error) {
-        console.log("Error generating access and refresh token", error)
+        // console.log("Error generating access and refresh token", error)
         throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
 }
@@ -187,7 +187,7 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
         const user = await User.findById(decodedToken?.id);
 
         if (!user || incomingRefreshToken !== user.refreshToken) {
-            console.log(incomingRefreshToken, "|", user?.refreshToken);
+            // console.log(incomingRefreshToken, "|", user?.refreshToken);
             return next(new ApiError(401, "Invalid refresh token"));
         }
 

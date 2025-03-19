@@ -21,7 +21,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
         req.user = user;  // ✅ Assign user to `req.user`
         next();           // ✅ `next()` should be inside the `try` block
     } catch (error) {
-        console.log("error: ", error);
+        // console.log("error: ", error);
         throw new ApiError(401, error?.message || "Unauthorized");
     }
 });

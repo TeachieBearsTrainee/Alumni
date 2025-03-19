@@ -6,7 +6,6 @@ const authorizedRole = (...roles) => {
         try {
             // Ensure req.user exists and has id
             if (!req.user || !req.user.id) {
-                console.log(req.user)
                 throw new ApiError(401, "User not authenticated 123");
             }
 
@@ -18,7 +17,6 @@ const authorizedRole = (...roles) => {
             }
 
             if (!roles.includes(user.role)) {
-                // console.log(user.role, roles)
                 return res.status(403).json({ message: "You are not authorized to access this route" });
             }
 

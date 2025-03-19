@@ -1,9 +1,9 @@
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
+import { ApiError } from "./ApiError.js";
 
 
 const uploadOnCloudinary = async (localFilePath, email, fileType) => {
-    console.log("1", localFilePath, email, fileType)
     try {
         cloudinary.config({
             cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -21,7 +21,6 @@ const uploadOnCloudinary = async (localFilePath, email, fileType) => {
 
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: fileType === "pdf" ? "auto" : "image", // 🔥 Ensures PDFs are handled correctly
-            // public_id: `${sanitizedEmail}`,
             public_id: `${sanitizedEmail}_${fileType}`,
             format, // ✅ Ensures correct format for each file type
             overwrite: false
@@ -34,8 +33,7 @@ const uploadOnCloudinary = async (localFilePath, email, fileType) => {
         if (localFilePath) {
             fs.unlinkSync(localFilePath);
         }
-        console.log(error);
-        return null;
+        throw new ApiError(500, "Something went wrong while uploading to cloudinary", error.message);
     }
 };
 
@@ -52,8 +50,7 @@ const deleteOnCloudinary = async (publicId) => {
         const response = await cloudinary.uploader.destroy(publicId);
         return response;
     } catch (error) {
-        console.log(error)
-        return null;
+        throw new ApiError(500, "Something went wrong while deleting from cloudinary", error.message);
     }
 }
 
