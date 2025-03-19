@@ -5,12 +5,15 @@ import AboutUs from "./components/AboutUs"
 import Navbar from "./components/Navbar";
 import Login from "./components/login/login";
 import AluminiConnection from "./components/AluminiConnection";
+import Footer from "./components/Footer";
+import Signup from "./components/signup/Signup";
+import SignUp2 from "./components/signup/SignUp2";
 
 
 const Layout = () => {
   return (
     <>
-      <Navbar /> 
+      <Navbar />
       <Outlet />
     </>
   );
@@ -18,18 +21,26 @@ const Layout = () => {
 
 const router = createBrowserRouter([
   {
-    element: <Layout />, 
+    element: <Layout />,
     children: [
-      { path: "/", 
-        element: <Home /> },
-      { path: "/about", 
-        element: <AboutUs/> },
-      { path: "/aluminiConnections", 
-        element: <AluminiConnection/> },
-      
+      {
+        path: "/",
+        element: <Home />
+      },
+      {
+        path: "/about",
+        element: <><AboutUs /><Footer /></>
+      },
+      {
+        path: "/aluminiConnections",
+        element: <AluminiConnection />
+      },
+
     ],
   },
-  { path: "/login", element: <Login /> }, 
+  { path: "/signup", element: <Signup /> },
+  { path: "/signup2", element: <SignUp2 /> },
+  { path: "/login", element: <Login /> },
 ]);
 
 const App = () => {

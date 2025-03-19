@@ -12,7 +12,7 @@ const AluminiConnection = () => {
       {/* Sidebar */}
       <div className="relative w-[27%] h-full bg-[#1A1A1A] rounded-3xl">
         <div className="py-[10%] flex flex-col items-center relative h-[35%] text-white">
-          <div className="w-45 h-45 bg-white rounded-[50%]"></div>
+          <div className="w-[40%] h-[100%] bg-white rounded-[50%]"></div>
           <h1 className="font-medium text-xl mt-3">Rajnish Manda</h1>
           <p className="text-sm">I Love Alumini</p>
           <div className="absolute w-full h-[2px] bg-[#3C3C3C] bottom-0"></div>
@@ -41,8 +41,8 @@ const AluminiConnection = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-[73%] h-full bg-[#1A1A1A] rounded-3xl overflow-auto">
-        <TabPanel><Posts/><Posts/><Posts/></TabPanel>
+      <div className="w-[73%] h-full bg-[#1A1A1A] rounded-3xl p-10 overflow-auto">
+        <TabPanel><Posts /><Posts /><Posts /></TabPanel>
         <TabPanel><Chats /></TabPanel>
         <TabPanel><Connection /></TabPanel>
         <TabPanel><Events /></TabPanel>
