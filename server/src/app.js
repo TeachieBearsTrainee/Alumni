@@ -29,7 +29,7 @@ app.get("/api/v1/check",refreshAccessToken, verifyJWT, authorizedRole("admin"),(
     res.send("authorized");
 })
 
-app.use(errorHandler)
+// app.use(errorHandler)
 
 
 // app.use(errorHandler)

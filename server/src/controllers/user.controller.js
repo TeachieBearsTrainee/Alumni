@@ -5,6 +5,7 @@ import asyncHandler from "express-async-handler"
 import jwt from "jsonwebtoken";
 import { Student } from "../models/student.models.js";
 import mongoose from "mongoose";
+import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
 const generateAccessAndRefereshTokens = async (userId) => {
@@ -25,14 +26,15 @@ const generateAccessAndRefereshTokens = async (userId) => {
     }
 }
 
+
 const registerUser = asyncHandler(async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
 
     const { email, password, ...studentData } = req.body;
-
-    if (!email) return res.status(400).json(new ApiResponse(400, "Email is required"));
-    if (!password) return res.status(400).json(new ApiResponse(400, "Password is required"));
+    if (!email || !password) {
+        return res.status(400).json(new ApiResponse(400, "Email and password are required"));
+    }
 
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
@@ -41,12 +43,36 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "User with this email already exists");
     }
 
+    const filePaths = {
+        profilePicPath: req.files?.profilePic?.[0]?.path,
+        graduationCertificatePath: req.files?.graduationCertificate?.[0]?.path,
+        introVideoPath: req.files?.introVideo?.[0]?.path
+    };
+
+    const uploadedFiles = {};
+
+    try {
+        for (const [key, path] of Object.entries(filePaths)) {
+            if (path) {
+                const fileType = key.includes("Video") ? "video" : key.includes("Certificate") ? "pdf" : "image";
+                uploadedFiles[key] = await uploadOnCloudinary(path, email, fileType);
+            }
+        }
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        console.error(error);
+        throw new ApiError(500, "Failed to upload files.");
+    }
+
     try {
         const user = new User({ email, password });
-
         const student = new Student({
             ...studentData,
-            userID: user.id
+            userID: user.id,
+            profilePic: uploadedFiles.profilePicPath?.url,
+            graduationCertificate: uploadedFiles.graduationCertificatePath?.url,
+            introVideo: uploadedFiles.introVideoPath?.url
         });
 
         await user.save({ session });
@@ -55,13 +81,15 @@ const registerUser = asyncHandler(async (req, res) => {
         await session.commitTransaction();
         session.endSession();
 
-        return res
-            .status(201)
-            .json(new ApiResponse(200, { user, student }, "User registered successfully"));
+        return res.status(201).json(new ApiResponse(200, { user, student }, "User registered successfully"));
 
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
+
+        for (const file of Object.values(uploadedFiles)) {
+            if (file) await deleteOnCloudinary(file.public_id);
+        }
 
         console.error(error);
 
@@ -73,7 +101,6 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while registering the user");
     }
 });
-
 
 
 
