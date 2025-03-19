@@ -35,6 +35,9 @@ app.use("/api/v1/", userRoute)
 app.get("/api/v1/check",refreshAccessToken, verifyJWT, authorizedRole("user"),(req, res) => {
     res.send("authorized");
 })
+app.get("/api/v1/vercel-check", (req, res) => {
+    res.send("vercel");
+})
 
 // app.use(errorHandler)
 
