@@ -3,7 +3,7 @@
 ## Base URL
 
 ```
-http://localhost:6001/api/v1
+https://alumni-fuia.onrender.com/api/v1
 ```
 
 ---
@@ -13,7 +13,7 @@ http://localhost:6001/api/v1
 ### Endpoint
 
 ```
-POST http://localhost:6001/api/v1/register
+POST https://alumni-fuia.onrender.com/api/v1/register
 ```
 
 ### Request Body
@@ -63,7 +63,7 @@ POST http://localhost:6001/api/v1/register
 ### Endpoint
 
 ```
-POST http://localhost:6001/api/v1/login
+POST https://alumni-fuia.onrender.com/api/v1/login
 ```
 
 ### Request Body
@@ -107,7 +107,7 @@ POST http://localhost:6001/api/v1/login
 ### Endpoint
 
 ```
-POST http://localhost:6001/api/v1/logout
+POST https://alumni-fuia.onrender.com/api/v1/logout
 ```
 
 ### Headers
