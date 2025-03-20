@@ -106,34 +106,52 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
 const loginUser = asyncHandler(async (req, res) => {
-    // req body -> data
-    // username or email
-    //find the user
-    //password check
-    //access and referesh token
-    //send cookie
+    const { email, password } = req.body;
 
-    const { email, password } = req.body
+    // Input validation
+    if (!email || !password) {
+        return res.status(400).json(
+            new ApiResponse(
+                400,
+                null,
+                "Email and password are required."
+            )
+        );
+    }
 
-    if (!email) throw new ApiError(400, "Email is required")
-    if (!password) throw new ApiError(400, "Password is required")
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.status(404).json(
+            new ApiResponse(
+                404,
+                null,
+                "Invalid email or password."
+            )
+        );
+    }
 
-    const user = await User.findOne({ email })
+    const isPasswordValid = await user.isPasswordCorrect(password);
+    if (!isPasswordValid) {
+        return res.status(401).json(
+            new ApiResponse(
+                401,
+                null,
+                "Invalid email or password."
+            )
+        );
+    }
 
-    if (!user) throw new ApiError(404, "Invalid user credentials")
+    // Generate tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
 
-    const isPasswordValid = await user.isPasswordCorrect(password)
-
-    if (!isPasswordValid) throw new ApiError(401, "Invalid user credentials")
-
-    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
-
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+    // Remove sensitive data before sending
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
     const options = {
         httpOnly: true,
-        secure: true
-    }
+        secure: true, // Ensures cookies are sent only over HTTPS
+        sameSite: 'Strict' // Improves CSRF protection
+    };
 
     return res
         .status(200)
@@ -142,14 +160,11 @@ const loginUser = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                {
-                    user: loggedInUser, accessToken, refreshToken
-                },
-                "User logged In Successfully"
+                { user: loggedInUser, accessToken, refreshToken },
+                "User logged in successfully."
             )
-        )
-
-})
+        );
+});
 
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
