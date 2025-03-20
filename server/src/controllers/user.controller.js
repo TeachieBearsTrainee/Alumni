@@ -6,7 +6,25 @@ import jwt from "jsonwebtoken";
 import { Student } from "../models/student.models.js";
 import mongoose from "mongoose";
 import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
+import fs from 'fs/promises';
 
+const deleteLocalFiles = async (filePaths) => {
+    // console.log("filePaths (before check):", filePaths);
+
+    // Ensure filePaths is an array or convert it if needed
+    const paths = Array.isArray(filePaths) ? filePaths : [filePaths];
+
+    for (const path of paths) {
+        if (path) {
+            try {
+                await fs.unlink(path);
+                // console.log(`Deleted file: ${path}`);
+            } catch (err) {
+                // console.error(`Failed to delete file: ${path}`, err);
+            }
+        }
+    }
+};
 
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
@@ -26,20 +44,26 @@ const generateAccessAndRefereshTokens = async (userId) => {
     }
 }
 
-
 const registerUser = asyncHandler(async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
 
     const { email, password, ...studentData } = req.body;
-    if (!email || !password) {
-        return res.status(400).json(new ApiResponse(400, "Email and password are required"));
+    if (!password) {
+        await deleteLocalFiles(req.files?.graduationCertificate?.[0]?.path);
+        return res.status(400).json(new ApiResponse(400,null, "Password is required"));
+    }
+
+    if (!email) {
+        await deleteLocalFiles(req.files?.graduationCertificate?.[0]?.path);
+        return res.status(400).json(new ApiResponse(400,null, "Email is required"));
     }
 
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
         await session.abortTransaction();
         session.endSession();
+        await deleteLocalFiles(req.files?.graduationCertificate?.[0]?.path);
         throw new ApiError(409, "User with this email already exists");
     }
 
@@ -61,7 +85,7 @@ const registerUser = asyncHandler(async (req, res) => {
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
-        console.error(error);
+        await deleteLocalFiles(filePaths);
         throw new ApiError(500, "Failed to upload files.");
     }
 
@@ -81,17 +105,17 @@ const registerUser = asyncHandler(async (req, res) => {
         await session.commitTransaction();
         session.endSession();
 
-        return res.status(201).json(new ApiResponse(200, { user, student }, "User registered successfully"));
+        await deleteLocalFiles(filePaths);
 
+        return res.status(201).json(new ApiResponse(200, { user, student }, "User registered successfully"));
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
 
+        await deleteLocalFiles(filePaths);
         for (const file of Object.values(uploadedFiles)) {
             if (file) await deleteOnCloudinary(file.public_id);
         }
-
-        console.error(error);
 
         if (error.name === "ValidationError") {
             const errorMessages = Object.values(error.errors).map(err => err.message);
@@ -101,8 +125,6 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while registering the user");
     }
 });
-
-
 
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -188,7 +210,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .clearCookie("refreshToken", options)
         .json(new ApiResponse(200, "User logged out successfully"))
 })
- 
+
 const refreshAccessToken = asyncHandler(async (req, res, next) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
@@ -217,9 +239,9 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
         res
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
-            // .status(200)
-            // .json({ message: "Access token refreshed successfully" });  // Added response
-        
+        // .status(200)
+        // .json({ message: "Access token refreshed successfully" });  // Added response
+
         next();
 
     } catch (error) {

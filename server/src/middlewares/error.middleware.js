@@ -4,13 +4,16 @@ import { ApiError } from "../utils/ApiError.js";
 const errorHandler = (err, req, res, next) => {
     let error = err;
 
-    if (!(error instanceof ApiError)) {  // Corrected the instanceof check
+    // Handle Mongoose CastError
+    if (error?.name === "CastError") {
+        error = new ApiError(400, "Invalid ID format");
+    }
+
+    if (!(error instanceof ApiError)) {
         const statusCode = error.statusCode || (error instanceof mongoose.Error ? 500 : 400);
         const message = error.message || "Something went wrong";
         error = new ApiError(statusCode, message, error?.errors || [], error?.stack);
     }
-
-    if (error?.name === "CastError") return error = new ApiError(400, "Casting format");
 
     const response = {
         success: false,
@@ -18,7 +21,7 @@ const errorHandler = (err, req, res, next) => {
         ...(process.env.NODE_ENV === "development" && { stack: error.stack })
     };
 
-    return res.status(error.statusCode || 500).json(response);  // Added fallback to 500
+    return res.status(error.statusCode || 500).json(response);
 };
 
 export { errorHandler };

@@ -23,7 +23,6 @@ const authorizedRole = (...roles) => {
             next(); // Continue to the next middleware
 
         } catch (error) {
-            console.error(error);
             next(new ApiError(500, "Something went wrong while authorizing the user", error.message));
         }
     };
